@@ -8,4 +8,17 @@
   body {
     @apply font-roboto;
   }
+  #tabs-home-tab3:active{
+    @apply text-blue-700 border-solid border-b border-blue-700 border-transparent;
+  }
+  #tabs-home-tab3:active ~ #tabs-home3{
+    @apply opacity-100 text-black;
+  }
+  #tabs-profile-tab3:active{
+    @apply text-blue-700 border-solid border-b border-blue-700 border-transparent;
+  }
+  #tabs-profile-tab3:active ~ #tabs-profile3{
+    @apply opacity-100 text-black;
+  }
+
 }

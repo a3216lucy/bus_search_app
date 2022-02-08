@@ -6,6 +6,9 @@ module.exports = {
       fontFamily: {
         "roboto": ["Roboto"],
       },
+      width: { 
+        '120': '35rem',
+      }
     },
   },
   variants: {

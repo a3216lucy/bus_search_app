@@ -33,3 +33,42 @@ function select(){
   citySelect.innerHTML = str;
 }
 select();
+
+// bus route name
+const routeSearch = document.querySelector('#routeSearch');
+
+let city = '';
+let routeName = '';
+
+citySelect.addEventListener('change', function (e) {
+  city = e.target.value;
+  console.log('city', city);
+})
+routeSearch.addEventListener('blur', function (e) {
+  routeName = e.target.value;
+  console.log('routeName', routeName);
+})
+
+// get bus estimate to stop time
+let busData = [];
+let goData = [];
+let backData = [];
+const searchBtn = document.querySelector('#searchBtn');
+function getBus(){
+
+}
+searchBtn.addEventListener('click', getBus);
+
+
+// get bus route stop name
+const goList = document.querySelector('#goList');
+const backList = document.querySelector('#backList');
+
+function goRoute(){
+
+}
+
+// for API authentication
+function getAuthenticationHeader(){
+  
+}
