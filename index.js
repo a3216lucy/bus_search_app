@@ -54,21 +54,128 @@ let busData = [];
 let goData = [];
 let backData = [];
 const searchBtn = document.querySelector('#searchBtn');
-function getBus(){
 
+function getBus() {
+  axios.get(
+    `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/${city}/${routeName}`,
+    {
+       headers: getAuthorizationHeader()
+    })
+    .then((response) => {
+      console.log('預估', response)
+      const data = response.data;
+
+      // 篩出有在跑的公車(存公車物件)
+      const bus = data.filter((item) => item.PlateNumb)
+      // console.log('bus', bus)
+
+      //從有在跑的公車資料裡分類出「去程0」與「返程1」
+      const cachegoData = bus.filter((item) => !item.Direction);
+      const cachebackData = bus.filter((item) => item.Direction);
+
+      console.log('cachebackData', cachebackData)
+      // console.log('cachegoData',goData)
+
+
+      // 組出我要的資料格式
+      cachebackData.forEach((item) => { // [a,a,b,c]
+        const index = backData.map(item => item.plateNumb).indexOf(item.PlateNumb)
+        
+        if (index === -1) { // 代表沒找到
+          backData.push({
+            plateNumb: item.PlateNumb, //車牌號碼
+            stops: [{
+              estimateTime: item.EstimateTime,//到站時間預估(秒) 
+              stopUID: item.StopUID//站牌唯一識別代碼
+            }]
+          })
+        } else { // 有找到
+          backData[index].stops.push({
+            estimateTime: item.EstimateTime,//到站時間預估(秒) 
+            stopUID: item.StopUID//站牌唯一識別代碼
+          });
+        }
+
+
+      })
+      console.log('backData', backData)
+
+      getRoute();
+    })
+    .catch((error) => console.log('error', error))
 }
 searchBtn.addEventListener('click', getBus);
+
 
 
 // get bus route stop name
 const goList = document.querySelector('#goList');
 const backList = document.querySelector('#backList');
 
-function goRoute(){
+function getRoute() {
+  axios.get(
+    `https://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/${city}/${routeName}`,
+    {
+       headers: getAuthorizationHeader()
+    })
+    .then((response) => {
+      console.log('往返列表', response)
+      const data = response.data;
 
+      const routeData = data.filter((item) => item.RouteID === routeName)
+
+      // 返程
+      let backStr = '';
+      let busID = ''
+      let time = 0;
+      let timeText = '';
+
+      routeData[1].Stops.forEach((item) => {
+        backData.forEach((back) => {
+          back.stops.forEach((stop) => {
+            if (stop.stopUID === item.StopUID) {
+              busID = back.plateNumb
+              time = Math.floor(stop.estimateTime / 60)
+              // console.log(busID, time)
+
+              // 文字顯示
+              if (time === 0) {
+                timeText = '進站中';
+              } else if (time <= 1 && 0 < time) {
+                timeText = '即將到站';
+              } else if (!time) {
+                timeText = '--';
+              } else {
+                timeText = `${time} 分鐘`;
+              }
+            }
+          })
+        })
+        backStr += `<li class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center ">
+              <p class="timeColor border rounded-pill px-2 me-2 mb-0 bg-light">${timeText}</p>
+              <h5 class="fs-6 mb-0">${item.StopUID}/${item.StopName.Zh_tw}</h5>
+            </div>
+            <p class="mb-0 text-primary">${busID}</p>
+          </li>
+       `
+      })
+      backList.innerHTML = backStr;
+    })
+    .catch((error) => console.log('error', error))
 }
 
+
 // for API authentication
-function getAuthenticationHeader(){
-  
+function getAuthorizationHeader() {
+  var AppID = '251cbbac240a4341823cc83d8243c3ad';
+  var AppKey = 'TPZlwBr73sr1rMBNHm6iEHnKY3M';
+
+  let GMTString = new Date().toGMTString();
+  let ShaObj = new jsSHA('SHA-1', 'TEXT');
+  ShaObj.setHMACKey(AppKey, 'TEXT');
+  ShaObj.update('x-date: ' + GMTString);
+  let HMAC = ShaObj.getHMAC('B64');
+  let Authorization = 'hmac username=\"' + AppID + '\", algorithm=\"hmac-sha1\", headers=\"x-date\", signature=\"' + HMAC + '\"';
+  return { 'Authorization': Authorization, 'X-Date': GMTString }; 
 }

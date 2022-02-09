@@ -6,6 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bus Search App</title>
   <link rel="stylesheet" href="./css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 <body>
   
@@ -24,11 +26,11 @@
     <div class="shadow-sm">
       <div>
         <label for="bus_number" class="sr-only">Bus NO. </label>
-        <input id="bus_number" name="bus_number" type="text" autocomplete="current-password" required class="appearance-none relative block w-32 px-3 py-1.5 border border-gray-300 placeholder-gray-500 rounded text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10" placeholder="範例：橘5">
+        <input id="routeSearch"name="bus_number" type="text" autocomplete="current-password" required class="appearance-none relative block w-32 px-3 py-1.5 border border-gray-300 placeholder-gray-500 rounded text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10" placeholder="範例：橘5">
       </div>
     </div>
     <div>
-      <button type="submit" id="searchBtn" class="group relative flex justify-center py-1.5 px-4 mt-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+      <button type="button" id="searchBtn" class="group relative flex justify-center py-1.5 px-4 mt-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
         查詢
       </button>
     </div>
@@ -49,20 +51,23 @@
     <!-- Tab Contents -->
     <div id="tab-contents">
       <div id="first" class="p-4">
-        First tab
+        <div class="tab-pane fade" >
+          <ul class="list-group" id="goList">
+          </ul>
       </div>
       <div id="second" class="hidden p-4">
-        Second tab
-      </div>
+        <div class="tab-pane fade" >
+          <ul class="list-group" id="backList">
+          </ul>
+        </div>
     </div>
   </div>
 
-
-
 </div>
 </div>
 
 </div>
+<script src="./index.js"></script>
 <script>
   let tabsContainer = document.querySelector("#tabs");
 
@@ -90,10 +95,6 @@ tabTogglers.forEach(function(toggler) {
     e.target.parentElement.classList.add("border-t", "border-r", "border-l", "-mb-px", "bg-white");
   });
 });
-
 </script>
-
-<script src="./index.js"></script>
-
 </body>
 </html>
