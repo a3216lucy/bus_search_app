@@ -1,100 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bus Search App</title>
-  <link rel="stylesheet" href="./css/style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-</head>
-<body>
-  
-<div class="flex flex-row">
-<!-- select menu -->
-<div class="w-48 ml-16 my-20 border border-slate-300 border-solid rounded-md">
-<div class="container my-5 mx-5">
-  <form class="space-y-3" action="#" method="POST">
-    <label id="listbox-label" class="block text-lg font-medium text-gray-700" for="citySelect"> 選擇地區 </label>
-    <div class="custom-select relative max-w-lg py-1" style="width: max-content;">
-      <select class="form-select py-1.5 px-2 rounded-md w-32" id="citySelect" aria-label="選擇地區下拉選單">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bus Search App</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="flex flex-row">
+      <!-- select menu -->
+      <div
+        class="w-48 ml-16 my-20 border border-slate-300 border-solid rounded-md"
+      >
+        <div class="container my-5 mx-5">
+          <form class="space-y-3" action="#" method="POST">
+            <label
+              id="listbox-label"
+              class="block text-lg font-medium text-gray-700"
+              for="citySelect"
+            >
+              選擇地區
+            </label>
+            <div
+              class="custom-select relative max-w-lg py-1"
+              style="width: max-content"
+            >
+              <select
+                class="form-select py-1.5 px-2 rounded-md w-32"
+                id="citySelect"
+                aria-label="選擇地區下拉選單"
+              ></select>
+            </div>
+            <label
+              id="listbox-label"
+              class="block text-lg font-medium text-gray-700"
+              for="routeSearch"
+            >
+              公車號碼
+            </label>
+            <input type="hidden" name="remember" value="true" />
+            <div class="shadow-sm">
+              <div>
+                <label for="bus_number" class="sr-only">Bus NO. </label>
+                <input
+                  id="routeSearch"
+                  name="bus_number"
+                  type="text"
+                  autocomplete="current-password"
+                  required
+                  class="
+                    appearance-none
+                    relative
+                    block
+                    w-32
+                    px-3
+                    py-1.5
+                    border border-gray-300
+                    placeholder-gray-500
+                    rounded
+                    text-gray-900
+                    focus:outline-none
+                    focus:ring-indigo-500
+                    focus:border-indigo-500
+                    focus:z-10
+                  "
+                  placeholder="範例：橘5"
+                />
+              </div>
+            </div>
+            <div>
+              <button
+                type="button"
+                id="searchBtn"
+                class="
+                  group
+                  relative
+                  flex
+                  justify-center
+                  py-1.5
+                  px-4
+                  mt-1.5
+                  border border-transparent
+                  text-sm
+                  font-medium
+                  rounded-md
+                  text-white
+                  bg-indigo-600
+                  hover:bg-indigo-700
+                  focus:outline-none
+                  focus:ring-2
+                  focus:ring-offset-2
+                  focus:ring-indigo-500
+                "
+              >
+                查詢
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- <div class="card card-body">
+    <div class="mb-3">
+      <label for="citySelect" class="form-label">選擇地區</label>
+      <select class="form-select" id="citySelect" aria-label="選擇地區下拉選單">
       </select>
     </div>
-    <label id="listbox-label" class="block text-lg font-medium text-gray-700" for="routeSearch"> 公車號碼 </label>
-    <input type="hidden" name="remember" value="true">
-    <div class="shadow-sm">
-      <div>
-        <label for="bus_number" class="sr-only">Bus NO. </label>
-        <input id="routeSearch"name="bus_number" type="text" autocomplete="current-password" required class="appearance-none relative block w-32 px-3 py-1.5 border border-gray-300 placeholder-gray-500 rounded text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10" placeholder="範例：橘5">
-      </div>
+    <div class="mb-3">
+      <label for="routeSearch" class="form-label">搜尋公車號碼</label>
+      <input id="routeSearch" type="text" class="form-control" placeholder="例：紅56">
     </div>
-    <div>
-      <button type="button" id="searchBtn" class="group relative flex justify-center py-1.5 px-4 mt-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-        查詢
-      </button>
-    </div>
-  </form>
-</div>
-</div>
-
-
- <!-- Tab -->
- <div class="w-120 ml-5 mr-16 my-20 border border-slate-300 border-solid rounded-md">
- <div class="container">
- 
-    <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">
-      <li class="bg-white px-4 text-blue-600 font-normal py-2 rounded-t border-t border-r border-l -mb-px"><a id="default-tab" href="#first">去向</a></li>
-      <li class="px-4 text-blue-600 font-normal py-2 rounded-t"><a href="#second">返向</a></li>
-    </ul>
-  
-    <!-- Tab Contents -->
-    <div id="tab-contents">
-      <div id="first" class="p-4">
-        <div class="tab-pane fade" >
-          <ul class="list-group" id="goList">
-          </ul>
-      </div>
-      <div id="second" class="hidden p-4">
-        <div class="tab-pane fade" >
-          <ul class="list-group" id="backList">
-          </ul>
-        </div>
+    <div class="text-end">
+      <button type="button" class="btn btn-primary" id="searchBtn">搜尋</button>
     </div>
   </div>
-
 </div>
-</div>
+</div> -->
 
-</div>
-<script src="./index.js"></script>
-<script>
-  let tabsContainer = document.querySelector("#tabs");
+      <!-- Tab -->
+      <div
+        class="
+          w-120
+          ml-5
+          mr-16
+          my-20
+          border border-slate-300 border-solid
+          rounded-md
+        "
+      >
+        <div class="container">
+          <ul id="tabs" class="inline-flex pt-2 px-1 w-full border-b">
+            <li
+              class="
+                bg-white
+                px-4
+                text-blue-600
+                font-normal
+                py-2
+                rounded-t
+                border-t border-r border-l
+                -mb-px
+              "
+            >
+              <a id="default-tab" href="#first">去向</a>
+            </li>
+            <li class="px-4 text-blue-600 font-normal py-2 rounded-t">
+              <a href="#second">返向</a>
+            </li>
+          </ul>
 
-let tabTogglers = tabsContainer.querySelectorAll("#tabs a");
+          <!-- Tab Contents -->
+          <div id="tab-contents">
+            <div id="first" class="p-4">
+              <div class="tab-pane fade">
+                <ul class="list-group" id="goList"></ul>
+              </div>
+              <div id="second" class="hidden p-4">
+                <div class="tab-pane fade">
+                  <ul class="list-group" id="backList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/3.2.0/sha.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./index.js"></script>
+    <script>
+      let tabsContainer = document.querySelector("#tabs");
 
-console.log(tabTogglers);
+      let tabTogglers = tabsContainer.querySelectorAll("#tabs a");
 
-tabTogglers.forEach(function(toggler) {
-  toggler.addEventListener("click", function(e) {
-    e.preventDefault();
+      console.log(tabTogglers);
 
-    let tabName = this.getAttribute("href");
+      tabTogglers.forEach(function (toggler) {
+        toggler.addEventListener("click", function (e) {
+          e.preventDefault();
 
-    let tabContents = document.querySelector("#tab-contents");
+          let tabName = this.getAttribute("href");
 
-    for (let i = 0; i < tabContents.children.length; i++) {
-      
-      tabTogglers[i].parentElement.classList.remove("border-t", "border-r", "border-l", "-mb-px", "bg-white");  tabContents.children[i].classList.remove("hidden");
-      if ("#" + tabContents.children[i].id === tabName) {
-        continue;
-      }
-      tabContents.children[i].classList.add("hidden");
-      
-    }
-    e.target.parentElement.classList.add("border-t", "border-r", "border-l", "-mb-px", "bg-white");
-  });
-});
-</script>
-</body>
+          let tabContents = document.querySelector("#tab-contents");
+
+          for (let i = 0; i < tabContents.children.length; i++) {
+            tabTogglers[i].parentElement.classList.remove(
+              "border-t",
+              "border-r",
+              "border-l",
+              "-mb-px",
+              "bg-white"
+            );
+            tabContents.children[i].classList.remove("hidden");
+            if ("#" + tabContents.children[i].id === tabName) {
+              continue;
+            }
+            tabContents.children[i].classList.add("hidden");
+          }
+          e.target.parentElement.classList.add(
+            "border-t",
+            "border-r",
+            "border-l",
+            "-mb-px",
+            "bg-white"
+          );
+        });
+      });
+    </script>
+  </body>
 </html>

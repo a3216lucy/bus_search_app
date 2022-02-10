@@ -25,7 +25,7 @@ const cityData = [
 
 // select bus area 
 const citySelect = document.querySelector('#citySelect');
-function select(){
+function select() {
   let str = '';
   cityData.forEach((item) => {
     str += `<option value="${item.value}">${item.name}</option>`
@@ -34,20 +34,23 @@ function select(){
 }
 select();
 
+
 // bus route name
 const routeSearch = document.querySelector('#routeSearch');
 
 let city = '';
 let routeName = '';
 
-citySelect.addEventListener('change', function (e) {
+citySelect.addEventListener("change" , function (e) {
   city = e.target.value;
-  console.log('city', city);
+  console.log('city', city)
 })
+
 routeSearch.addEventListener('blur', function (e) {
   routeName = e.target.value;
-  console.log('routeName', routeName);
+  console.log('routeName', routeName)
 })
+
 
 // get bus estimate to stop time
 let busData = [];
@@ -56,11 +59,11 @@ let backData = [];
 const searchBtn = document.querySelector('#searchBtn');
 
 function getBus() {
-  axios.get(
-    `https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/${city}/${routeName}`,
-    {
-       headers: getAuthorizationHeader()
-    })
+  axios({
+    method: 'get',
+    url: "https://ptx.transportdata.tw/MOTC/v2/Bus/EstimatedTimeOfArrival/City/"+city+"/"+routeName,
+    headers: getAuthorizationHeader()
+  })
     .then((response) => {
       console.log('預估', response)
       const data = response.data;
@@ -96,7 +99,6 @@ function getBus() {
           });
         }
 
-
       })
       console.log('backData', backData)
 
@@ -111,13 +113,12 @@ searchBtn.addEventListener('click', getBus);
 // get bus route stop name
 const goList = document.querySelector('#goList');
 const backList = document.querySelector('#backList');
-
 function getRoute() {
-  axios.get(
-    `https://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/${city}/${routeName}`,
-    {
-       headers: getAuthorizationHeader()
-    })
+  axios({
+    method: 'get',
+    url: "https://ptx.transportdata.tw/MOTC/v2/Bus/StopOfRoute/City/"+city+"/"+routeName,
+    headers: getAuthorizationHeader()
+  })
     .then((response) => {
       console.log('往返列表', response)
       const data = response.data;
