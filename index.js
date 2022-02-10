@@ -68,16 +68,21 @@ function getBus() {
       console.log('預估', response)
       const data = response.data;
 
+      if(response.data.length == 0){
+        alert("公車號碼錯誤，請重新輸入！");
+      }
       // 篩出有在跑的公車(存公車物件)
-      const bus = data.filter((item) => item.PlateNumb)
-      // console.log('bus', bus)
+      const bus = data.filter((item) => item.PlateNumb  && item.PlateNumb.trim() && item.PlateNumb != "-1")
+      console.log('bus', bus)
+
+   
 
       //從有在跑的公車資料裡分類出「去程0」與「返程1」
       const cachegoData = bus.filter((item) => !item.Direction);
       const cachebackData = bus.filter((item) => item.Direction);
 
       console.log('cachebackData', cachebackData)
-      console.log('cachegoData',goData)
+      console.log('cachegoData',cachegoData)
 
 
       // 組出我要的資料格式
@@ -143,8 +148,8 @@ function getRoute() {
       console.log('往返列表', response)
       const data = response.data;
 
-      const routeData = data.filter((item) => item.RouteID === routeName)
-
+      const routeData = data.filter((item) => item.RouteName.Zh_tw === routeName)
+      console.log('routeData',routeData)
       let goStr = '';
       let backStr = '';
       let goBusID = '';
@@ -168,7 +173,7 @@ function getRoute() {
               } else if (time <= 1 && 0 < time) {
                 goTimeText = '即將到站';
               } else if (!time) {
-                goTimeText = '--';
+                goTimeText = '——';
               } else {
                 goTimeText = `${time} 分鐘`;
               }
