@@ -77,10 +77,30 @@ function getBus() {
       const cachebackData = bus.filter((item) => item.Direction);
 
       console.log('cachebackData', cachebackData)
-      // console.log('cachegoData',goData)
+      console.log('cachegoData',goData)
 
 
       // 組出我要的資料格式
+      cachegoData.forEach((item) => { // [a,a,b,c]
+        const index = goData.map(item => item.plateNumb).indexOf(item.PlateNumb)
+        
+        if (index === -1) { // 代表沒找到
+          goData.push({
+            plateNumb: item.PlateNumb, //車牌號碼
+            stops: [{
+              estimateTime: item.EstimateTime,//到站時間預估(秒) 
+              stopUID: item.StopUID//站牌唯一識別代碼
+            }]
+          })
+        } else { // 有找到
+          goData[index].stops.push({
+            estimateTime: item.EstimateTime,//到站時間預估(秒) 
+            stopUID: item.StopUID//站牌唯一識別代碼
+          });
+        }
+      })
+      console.log('goData', goData)
+
       cachebackData.forEach((item) => { // [a,a,b,c]
         const index = backData.map(item => item.plateNumb).indexOf(item.PlateNumb)
         
@@ -125,11 +145,46 @@ function getRoute() {
 
       const routeData = data.filter((item) => item.RouteID === routeName)
 
-      // 返程
+      let goStr = '';
       let backStr = '';
-      let busID = ''
+      let goBusID = '';
+      let busID = '';
       let time = 0;
       let timeText = '';
+      let goTimeText = '';
+
+
+      routeData[0].Stops.forEach((item) => {
+        goData.forEach((go) => {
+          go.stops.forEach((stop) => {
+            if (stop.stopUID === item.StopUID) {
+              goBusID = go.plateNumb
+              time = Math.floor(stop.estimateTime / 60)
+              // console.log(busID, time)
+
+              // 文字顯示
+              if (time === 0) {
+                goTimeText = '進站中';
+              } else if (time <= 1 && 0 < time) {
+                goTimeText = '即將到站';
+              } else if (!time) {
+                goTimeText = '--';
+              } else {
+                goTimeText = `${time} 分鐘`;
+              }
+            }
+          })
+        })
+        goStr += `<li class="list-group-item flex flex-row items-center justify-between py-2 border-b border-slate-300">
+            <div class="flex">
+              <p class="text-sm text-pink-600 rounded-3xl border px-2  ml-1 ">${goTimeText}</p>
+              <h5 class="pl-2">${item.StopUID}/${item.StopName.Zh_tw}</h5>
+            </div>
+            <p class="text-blue-700 text-sm">${goBusID}</p>
+          </li>
+       `
+      })
+      goList.innerHTML = goStr;
 
       routeData[1].Stops.forEach((item) => {
         backData.forEach((back) => {
@@ -152,12 +207,12 @@ function getRoute() {
             }
           })
         })
-        backStr += `<li class="list-group-item d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center ">
-              <p class="timeColor border rounded-pill px-2 me-2 mb-0 bg-light">${timeText}</p>
-              <h5 class="fs-6 mb-0">${item.StopUID}/${item.StopName.Zh_tw}</h5>
+        backStr += `<li class="list-group-item flex flex-row items-center justify-between py-2 border-b border-slate-300">
+            <div class="flex">
+              <p class="text-sm text-pink-600 rounded-3xl border px-2  ml-1 ">${timeText}</p>
+              <h5 class="pl-2">${item.StopUID}/${item.StopName.Zh_tw}</h5>
             </div>
-            <p class="mb-0 text-primary">${busID}</p>
+            <p class="text-blue-700 text-sm">${busID}</p>
           </li>
        `
       })
