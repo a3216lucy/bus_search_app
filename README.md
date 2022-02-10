@@ -3,7 +3,9 @@
 ## 介紹
 介接 [TDX 運輸資料流通服務 API](https://tdx.transportdata.tw/) 資料，實作呈現公車資訊。
 
-<a href="https://a3216lucy.github.io/bus_search_app/" target="new_blank"><img width="854" alt="bus_search_app_demo_pic" src="https://user-images.githubusercontent.com/32087302/153348255-221004f2-2c78-4356-89dd-d40051389db4.png"></a>
+<a href="https://a3216lucy.github.io/bus_search_app/" target="_blank">
+<img width="854" alt="bus_search_app_demo_pic" src="https://user-images.githubusercontent.com/32087302/153348255-221004f2-2c78-4356-89dd-d40051389db4.png">
+</a>
 
 [Live Demo](https://a3216lucy.github.io/bus_search_app/)
 
